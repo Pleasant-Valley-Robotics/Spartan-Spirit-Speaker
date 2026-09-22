@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Spartan Spirit Speaker</title>
+<meta name="description" content="A student-built fundraiser from Pleasant Valley Robotics. A wearable mini speaker loaded with the Spartan fight song. $20 per speaker.">
+<link rel="icon" href="assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1f2b45; --navy-2: #2b3a5c; --ink: #1c2233;
+    --ivory: #f7f6f2; --white: #fff; --line: #e3e2dc; --mute: #6a7183; --gold: #c9a24d;
+    --r: clamp(12px, 1.6vh, 20px);
+  }
+  * { box-sizing: border-box; min-width: 0; }
+  html, body { height: 100%; }
+  body { overflow-x: hidden; }
+  h1 { overflow-wrap: anywhere; }
+  body {
+    margin: 0; background: var(--ivory); color: var(--ink);
+    font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased; line-height: 1.45;
+  }
+  .display { font-family: "Barlow Condensed", "Arial Narrow", Impact, sans-serif; text-transform: uppercase; line-height: .95; letter-spacing: .01em; }
+  a { color: inherit; }
+  img { display: block; max-width: 100%; }
+
+  /* ===== Desktop: everything fits one 16:9 viewport ===== */
+  .page {
+    height: 100dvh; display: grid; grid-template-rows: auto 1fr auto auto;
+    padding: clamp(10px, 1.6vh, 20px) clamp(16px, 2.4vw, 40px); gap: clamp(8px, 1.4vh, 16px);
+    max-width: 1800px; margin-inline: auto;
+  }
+
+  /* Nav */
+  .nav { display: flex; align-items: center; justify-content: space-between; }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .brand img { width: clamp(28px, 4vh, 40px); height: auto; border-radius: 50%; box-shadow: 0 2px 8px rgba(31,43,69,.18); }
+  .brand span { font-family: "Barlow Condensed", sans-serif; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; font-size: clamp(16px, 2.4vh, 22px); }
+  .nav nav { display: flex; gap: clamp(14px, 2vw, 28px); font-size: 14px; font-weight: 500; color: var(--mute); }
+  .nav nav a { text-decoration: none; }
+  .nav nav a:hover { color: var(--ink); }
+
+  /* Main grid */
+  .main { display: grid; grid-template-columns: 1.05fr 1fr .78fr; gap: clamp(14px, 2vw, 32px); min-height: 0; align-items: stretch; }
+
+  /* Copy column */
+  .copy { display: flex; flex-direction: column; justify-content: center; gap: clamp(8px, 1.6vh, 18px); min-width: 0; }
+  h1 { margin: 0; font-size: clamp(38px, 8.6vh, 96px); font-weight: 800; color: var(--navy); }
+  h1 small { display: block; font-size: .5em; color: var(--mute); font-weight: 700; letter-spacing: .05em; margin-top: .08em; }
+  .lede { margin: 0; font-size: clamp(14px, 2vh, 18px); color: #3f4658; max-width: 38ch; }
+  .lede b { color: var(--navy); }
+  .price { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .price .each { font-size: 14px; color: var(--mute); font-weight: 500; }
+  .price .amt { font-family: "Barlow Condensed", sans-serif; font-weight: 800; font-size: clamp(30px, 5vh, 48px); line-height: 1; color: var(--navy); }
+
+  .cause { display: flex; gap: 12px; align-items: flex-start; background: var(--white); border: 1px solid var(--line); border-left: 4px solid var(--gold); border-radius: 12px; padding: clamp(8px, 1.4vh, 14px) 14px; max-width: 520px; }
+  .cause svg { flex: none; width: clamp(20px, 3.4vh, 30px); height: clamp(20px, 3.4vh, 30px); stroke: var(--navy); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; margin-top: 2px; }
+  .cause b { display: block; font-family: "Barlow Condensed", sans-serif; text-transform: uppercase; font-size: clamp(15px, 2.2vh, 19px); color: var(--navy); line-height: 1.05; margin-bottom: 3px; }
+  .cause p { margin: 0; font-size: clamp(12px, 1.7vh, 14px); color: #3f4658; line-height: 1.4; }
+
+  .contact { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; font-size: clamp(11px, 1.5vh, 13px); color: var(--mute); border-top: 1px solid var(--line); padding-top: clamp(6px, 1vh, 10px); }
+  .contact b { color: var(--navy); font-weight: 600; }
+  .contact a { color: var(--navy); text-decoration: none; border-bottom: 1px solid #c9ccd6; }
+  .contact a:hover { border-color: var(--navy); }
+  .contact .addr { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .contact svg { width: 14px; height: 14px; stroke: var(--navy); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+  .btn { display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; padding: clamp(9px, 1.4vh, 13px) 18px; font-weight: 600; font-size: 15px; border: 2px solid var(--navy); background: var(--navy); color: var(--white); cursor: pointer; white-space: nowrap; text-decoration: none; transition: background .12s, transform .12s; }
+  .btn:hover { background: var(--navy-2); transform: translateY(-1px); }
+  .buy { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
+  .buy .lbl { font-size: clamp(13px, 1.8vh, 15px); color: var(--mute); font-weight: 500; }
+  .buy .btn { font-size: clamp(14px, 2vh, 17px); padding: clamp(10px, 1.6vh, 14px) 22px; }
+
+  /* Product column */
+  .product { position: relative; display: grid; place-items: center; min-height: 0; border-radius: var(--r); background: #fefefe; border: 1px solid var(--line); overflow: hidden; box-shadow: 0 20px 40px -30px rgba(31,43,69,.35); }
+  .product img { position: relative; z-index: 1; max-height: 96%; max-width: 96%; width: auto; height: auto; object-fit: contain; animation: float 6s ease-in-out infinite; }
+  @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+  /* Photo column */
+  .photos { display: grid; grid-template-rows: 1fr 1fr; gap: clamp(10px, 1.6vh, 16px); min-height: 0; }
+  .photo { position: relative; border-radius: var(--r); overflow: hidden; min-height: 0; background: var(--navy); }
+  .photo img { width: 100%; height: 100%; object-fit: cover; }
+  .photo figcaption { position: absolute; left: 0; right: 0; bottom: 0; padding: 22px 14px 12px; color: var(--white); font-size: 13px; font-weight: 600; background: linear-gradient(transparent, rgba(20,28,48,.85)); }
+  .photo figcaption em { display: block; font-style: normal; font-weight: 400; font-size: 12px; opacity: .85; }
+
+  /* Feature strip */
+  .strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(8px, 1.2vw, 16px); border-top: 1px solid var(--line); padding-top: clamp(8px, 1.4vh, 14px); }
+  .feat { display: flex; gap: 10px; align-items: center; min-width: 0; }
+  .feat svg { flex: none; width: clamp(20px, 3.2vh, 28px); height: clamp(20px, 3.2vh, 28px); stroke: var(--navy); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .feat b { display: block; font-family: "Barlow Condensed", sans-serif; text-transform: uppercase; font-size: clamp(14px, 2vh, 18px); line-height: 1.05; color: var(--navy); }
+  .feat span { font-size: clamp(11px, 1.5vh, 13px); color: var(--mute); }
+
+  /* ===== Tablets / phones: stack and allow scrolling ===== */
+  @media (max-width: 960px), (max-aspect-ratio: 5/4) {
+    html, body { height: auto; }
+    .page { height: auto; min-height: 100dvh; display: flex; flex-direction: column; padding: 14px 16px 28px; gap: 16px; }
+    .brand span { font-size: 16px; white-space: nowrap; }
+    .main { grid-template-columns: 1fr; gap: 18px; }
+    .product { order: -1; aspect-ratio: 4/3; width: 100%; }
+    .product img { position: absolute; inset: 4%; width: 92%; height: 92%; max-width: none; max-height: none; object-fit: contain; }
+    .product img { height: 86%; }
+    h1 { font-size: clamp(40px, 12vw, 72px); }
+    .lede { font-size: 16px; max-width: none; }
+    .photos { grid-template-columns: 1fr 1fr; grid-template-rows: none; }
+    .photo { aspect-ratio: 1; }
+    .strip { grid-template-columns: 1fr 1fr; }
+    .cause { max-width: none; }
+    .contact { flex-direction: column; align-items: flex-start; gap: 6px; }
+    .contact .addr { flex-wrap: nowrap; align-items: flex-start; }
+    .contact svg { flex: none; margin-top: 2px; }
+  }
+  @media (max-width: 480px) {
+    .buy .btn { width: 100%; }
+    .price .each { font-size: 14px; color: var(--mute); font-weight: 500; }
+  .price .amt { font-size: 38px; }
+  }
+  @media (prefers-reduced-motion: reduce) { .product img { animation: none; } }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="nav">
+    <a class="brand" href="#">
+      <img src="assets/favicon.png" alt="">
+      <span>Spartan Spirit Speaker</span>
+    </a>
+  </header>
+
+  <main class="main">
+    <div class="copy">
+      <h1 class="display">Wear the roar.<small>The Spartan Spirit Speaker</small></h1>
+      <p class="lede">A wearable mini speaker <b>loaded with the Spartan fight song.</b> Clip it to your bag and bring the student section anywhere.</p>
+
+      <div class="buy">
+        <span class="lbl">To make a purchase, contact</span>
+        <a class="btn" href="mailto:franzenburgjason@pleasval.org?subject=Spartan%20Spirit%20Speaker%20purchase">franzenburgjason@pleasval.org</a>
+      </div>
+
+      <div class="price">
+        <span class="amt">$20</span>
+        <span class="each">per speaker</span>
+      </div>
+
+      <div class="cause">
+        <svg viewBox="0 0 24 24"><path d="M12 3 2 8l10 5 10-5-10-5z"/><path d="M6 10.5V16c0 1.5 3 3 6 3s6-1.5 6-3v-5.5"/><path d="M22 8v6"/></svg>
+        <div>
+          <b>A student-built fundraiser</b>
+          <p>Designed, manufactured, and programmed by Pleasant Valley Robotics students to build real technical skills. Every purchase supports the Robotics Teams and students in STEM extracurricular activities.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="product">
+      <img src="assets/product.png" alt="White Spartan Spirit Speaker medallion with navy Spartan helmet and PV logo" fetchpriority="high">
+    </div>
+
+    <div class="photos">
+      <figure class="photo" style="margin:0">
+        <img src="assets/group.jpg" alt="Four students wearing Spartan Spirit Speakers on their backpacks" loading="eager">
+        <figcaption>Made for the whole crew<em>Clip on, press, get loud</em></figcaption>
+      </figure>
+      <figure class="photo" style="margin:0">
+        <img src="assets/student.jpg" alt="Student with a Spartan Spirit Speaker clipped to a backpack strap">
+        <figcaption>Clips right on<em>Backpack, lanyard, or keychain</em></figcaption>
+      </figure>
+    </div>
+  </main>
+
+  <footer class="strip">
+    <div class="feat">
+      <svg viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+      <div><b>Fight song built in</b><span>The Spartan fight song, ready to play</span></div>
+    </div>
+    <div class="feat">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg>
+      <div><b>One button</b><span>Press once and it plays</span></div>
+    </div>
+    <div class="feat">
+      <svg viewBox="0 0 24 24"><rect x="3" y="7" width="15" height="10" rx="2"/><path d="M18 10h2v4h-2M7 12h6"/></svg>
+      <div><b>Rechargeable</b><span>Weeks of game days per charge</span></div>
+    </div>
+    <div class="feat">
+      <svg viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 5-3.5 8-7 9-3.5-1-7-4-7-9V6l7-3z"/></svg>
+      <div><b>Game-day tough</b><span>Molded shell, logo won't fade</span></div>
+    </div>
+  </footer>
+
+  <div class="contact">
+    <div class="addr">
+      <svg viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11a7 7 0 0 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+      <span><b>Pleasant Valley Robotics</b> &middot; <a href="https://maps.google.com/?q=604+Belmont+Rd,+Riverdale,+IA+52722" target="_blank" rel="noopener">604 Belmont Rd, Riverdale, IA 52722</a></span>
+    </div>
+    <span>Proceeds support Pleasant Valley Robotics Teams and student STEM programs. &copy; 2026</span>
+  </div>
+
+</div>
+</body>
+</html>
