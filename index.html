@@ -68,6 +68,25 @@
   .contact .addr { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
   .contact svg { width: 14px; height: 14px; stroke: var(--navy); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
+  /* Fight song player */
+  .player { display: flex; align-items: center; gap: 10px; background: var(--white); border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px 6px 6px; max-width: 520px; }
+  .player button { flex: none; display: inline-flex; align-items: center; justify-content: center; width: clamp(34px, 5vh, 42px); height: clamp(34px, 5vh, 42px); border-radius: 50%; border: 2px solid var(--navy); background: var(--navy); color: var(--white); cursor: pointer; padding: 0; transition: background .12s, transform .12s; }
+  .player button:hover { background: var(--navy-2); transform: translateY(-1px); }
+  .player button.restart { background: var(--white); color: var(--navy); }
+  .player button.restart:hover { background: var(--ivory); }
+  .player button:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+  .player svg { width: 45%; height: 45%; fill: currentColor; stroke: none; }
+  .player .restart svg { fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; width: 52%; height: 52%; }
+  .player .ico-pause { display: none; }
+  .player.playing .ico-play { display: none; }
+  .player.playing .ico-pause { display: block; }
+  .player .info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+  .player .row { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+  .player .title { font-family: "Barlow Condensed", sans-serif; text-transform: uppercase; font-weight: 700; font-size: clamp(14px, 2vh, 17px); color: var(--navy); line-height: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .player .time { font-size: 12px; color: var(--mute); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .player .bar { height: 4px; border-radius: 2px; background: var(--line); overflow: hidden; }
+  .player .fill { height: 100%; width: 0; background: var(--gold); transition: width .25s linear; }
+
   .btn { display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; padding: clamp(9px, 1.4vh, 13px) 18px; font-weight: 600; font-size: 15px; border: 2px solid var(--navy); background: var(--navy); color: var(--white); cursor: pointer; white-space: nowrap; text-decoration: none; transition: background .12s, transform .12s; }
   .btn:hover { background: var(--navy-2); transform: translateY(-1px); }
   .buy { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
@@ -108,6 +127,7 @@
     .photo { aspect-ratio: 1; }
     .strip { grid-template-columns: 1fr 1fr; }
     .cause { max-width: none; }
+    .player { max-width: none; }
     .contact { flex-direction: column; align-items: flex-start; gap: 6px; }
     .contact .addr { flex-wrap: nowrap; align-items: flex-start; }
     .contact svg { flex: none; margin-top: 2px; }
@@ -134,6 +154,24 @@
     <div class="copy">
       <h1 class="display">Wear the roar.<small>The Spartan Spirit Speaker</small></h1>
       <p class="lede">A wearable mini speaker <b>loaded with the Spartan fight song.</b> Clip it to your bag and bring the student section anywhere.</p>
+
+      <div class="player" id="player">
+        <audio id="song" src="assets/spartan-fight-song.mp3" preload="metadata"></audio>
+        <button type="button" class="play" id="playBtn" aria-label="Play the fight song">
+          <svg class="ico-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg>
+          <svg class="ico-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>
+        </button>
+        <button type="button" class="restart" id="restartBtn" aria-label="Start the fight song over">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5v6h6"/><path d="M5.5 14a7 7 0 1 0 1-6.5L4 11"/></svg>
+        </button>
+        <div class="info">
+          <div class="row">
+            <span class="title">Hear the Spartan fight song</span>
+            <span class="time" id="time">0:00 / 1:06</span>
+          </div>
+          <div class="bar" role="progressbar" aria-label="Song progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="bar"><div class="fill" id="fill"></div></div>
+        </div>
+      </div>
 
       <div class="buy">
         <span class="lbl">To make a purchase, contact</span>
@@ -198,5 +236,55 @@
   </div>
 
 </div>
+
+<script>
+  (function () {
+    var song = document.getElementById('song');
+    var player = document.getElementById('player');
+    var playBtn = document.getElementById('playBtn');
+    var restartBtn = document.getElementById('restartBtn');
+    var time = document.getElementById('time');
+    var bar = document.getElementById('bar');
+    var fill = document.getElementById('fill');
+
+    function fmt(s) {
+      s = Math.max(0, Math.round(s || 0));
+      return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+    }
+    function update() {
+      var d = song.duration, c = song.currentTime;
+      if (isFinite(d) && d > 0) {
+        time.textContent = fmt(c) + ' / ' + fmt(d);
+        var pct = Math.min(100, c / d * 100);
+        fill.style.width = pct + '%';
+        bar.setAttribute('aria-valuenow', Math.round(pct));
+      }
+    }
+    function setPlaying(on) {
+      player.classList.toggle('playing', on);
+      playBtn.setAttribute('aria-label', on ? 'Pause the fight song' : 'Play the fight song');
+    }
+
+    playBtn.addEventListener('click', function () {
+      if (song.paused) {
+        if (song.ended) song.currentTime = 0;
+        song.play().catch(function () {});
+      } else {
+        song.pause();
+      }
+    });
+    restartBtn.addEventListener('click', function () {
+      song.currentTime = 0;
+      update();
+      song.play().catch(function () {});
+    });
+
+    song.addEventListener('play', function () { setPlaying(true); });
+    song.addEventListener('pause', function () { setPlaying(false); });
+    song.addEventListener('ended', function () { setPlaying(false); song.currentTime = 0; update(); });
+    song.addEventListener('timeupdate', update);
+    song.addEventListener('loadedmetadata', update);
+  })();
+</script>
 </body>
 </html>
